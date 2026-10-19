@@ -9,7 +9,7 @@ export const openApiSpec = swaggerJsdoc({
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "Node + Express + TypeScript Starter API",
+      title: "Node + Express + TypeScript Template API",
       version: "1.0.0",
       description:
         "Demo API. /items is backed by PostgreSQL + Redis; /contact emails land in Mailpit (http://localhost:8025) during development.",

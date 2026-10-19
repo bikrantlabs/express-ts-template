@@ -1,6 +1,6 @@
-# express-ts-starter
+# express-ts-template
 
-Lean Node.js + Express + TypeScript starter. Postgres, Redis and Mailpit wired up,
+Lean Node.js + Express + TypeScript template. Postgres, Redis and Mailpit wired up,
 Swagger docs generated from the routes, linting and tests included.
 
 ## Requirements

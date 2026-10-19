@@ -10,6 +10,8 @@ Node 22+ and Docker.
 ## Getting started
 
 ```bash
+git clone git@github.com:bikrantlabs/express-ts-template.git
+cd express-ts-template
 npm install
 cp .env.example .env
 npm run db:up        # starts Postgres + Redis + Mailpit

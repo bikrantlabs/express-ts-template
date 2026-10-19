@@ -1,0 +1,13 @@
+import type { NextFunction, Request, Response } from "express";
+
+type AsyncRouteHandler = (req: Request, res: Response, next: NextFunction) => Promise<unknown>;
+
+/**
+ * Wrap async Express route handlers so rejected promises are forwarded to next().
+ * Usage: router.get("/", asyncHandler(async (req, res) => { ... }))
+ */
+export function asyncHandler(fn: AsyncRouteHandler) {
+  return (req: Request, res: Response, next: NextFunction): void => {
+    fn(req, res, next).catch(next);
+  };
+}

@@ -70,6 +70,8 @@ curl -X POST http://localhost:3000/api/items \
 | `npm run db:migrate-down`   | Roll back last migration                 |
 | `npm run db:redo`           | Roll back and re-apply                   |
 
+Migrations are plain SQL — write it yourself inside `pgm.sql()` in `up` and `down`.
+
 ## Adding a feature
 
 ```

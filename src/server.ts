@@ -25,7 +25,7 @@ async function main(): Promise<void> {
   } catch (err) {
     logger.error(
       { err },
-      "Could not reach PostgreSQL/Redis. Is Docker running? Try: npm run db:up && npm run db:migrate",
+      "Could not reach PostgreSQL/Redis. Is Docker running? Try: npm run db:up && npm run db:migrate-up",
     );
     process.exit(1);
   }

@@ -22,11 +22,11 @@
     "test:watch": "vitest",
     "db:up": "docker compose up -d --wait",
     "db:down": "docker compose down",
-    "db:reset": "docker compose down -v && docker compose up -d --wait && npm run db:migrate",
-    "db:migrate": "node-pg-migrate up",
-    "db:migrate:down": "node-pg-migrate down",
-    "db:redo": "node-pg-migrate redo",
-    "db:new": "node-pg-migrate create -j ts"
+    "db:reset": "docker compose down -v && docker compose up -d --wait && npm run db:migrate-up",
+    "db:migrate": "node-pg-migrate create",
+    "db:migrate-up": "node-pg-migrate up",
+    "db:migrate-down": "node-pg-migrate down",
+    "db:redo": "node-pg-migrate redo"
   },
   "dependencies": {
     "compression": "^1.7.5",

@@ -15,7 +15,7 @@ cd express-ts-template
 npm install
 cp .env.example .env
 npm run db:up        # starts Postgres + Redis + Mailpit
-npm run db:migrate   # creates the tables
+npm run db:migrate-up # creates the tables
 npm run dev
 ```
 
@@ -60,15 +60,15 @@ curl -X POST http://localhost:3000/api/items \
 
 ### Database
 
-|                           |                                          |
-| ------------------------- | ---------------------------------------- |
-| `npm run db:up`           | Start containers, wait until healthy     |
-| `npm run db:down`         | Stop containers                          |
-| `npm run db:reset`        | Wipe volumes, restart, re-run migrations |
-| `npm run db:migrate`      | Apply migrations                         |
-| `npm run db:migrate:down` | Roll back last migration                 |
-| `npm run db:redo`         | Roll back and re-apply                   |
-| `npm run db:new <name>`   | Create a migration                       |
+|                             |                                          |
+| --------------------------- | ---------------------------------------- |
+| `npm run db:up`             | Start containers, wait until healthy     |
+| `npm run db:down`           | Stop containers                          |
+| `npm run db:reset`          | Wipe volumes, restart, re-run migrations |
+| `npm run db:migrate <name>` | Create a migration, e.g. `add-users`     |
+| `npm run db:migrate-up`     | Apply migrations                         |
+| `npm run db:migrate-down`   | Roll back last migration                 |
+| `npm run db:redo`           | Roll back and re-apply                   |
 
 ## Adding a feature
 

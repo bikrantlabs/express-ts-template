@@ -1,49 +1,37 @@
-import { pool } from "@/db/pool";
-import type { Item, ItemRow } from "../items.types";
-import { toItem } from "../items.types";
+import { Prisma } from "@prisma/client";
+import { prisma } from "@/db/prisma";
+import type { Item } from "../items.types";
 
 /**
- * All SQL for the `items` table lives here. Use cases call these functions
- * and receive domain objects — they never see raw rows or build queries.
+ * All persistence for the `items` table lives here. Use cases call these
+ * functions and receive domain objects without depending on Prisma.
  */
 export const itemsRepository = {
   async findAll(): Promise<Item[]> {
-    const { rows } = await pool.query<ItemRow>(
-      "SELECT id, name, created_at, updated_at FROM items ORDER BY created_at DESC",
-    );
-    return rows.map(toItem);
+    return prisma.item.findMany({ orderBy: { createdAt: "desc" } });
   },
 
   async findById(id: string): Promise<Item | null> {
-    const { rows } = await pool.query<ItemRow>(
-      "SELECT id, name, created_at, updated_at FROM items WHERE id = $1",
-      [id],
-    );
-    const row = rows[0];
-    return row ? toItem(row) : null;
+    return prisma.item.findUnique({ where: { id } });
   },
 
   async create(name: string): Promise<Item> {
-    const { rows } = await pool.query<ItemRow>(
-      "INSERT INTO items (name) VALUES ($1) RETURNING id, name, created_at, updated_at",
-      [name],
-    );
-    const row = rows[0];
-    if (!row) throw new Error("INSERT returned no row");
-    return toItem(row);
+    return prisma.item.create({ data: { name } });
   },
 
   async update(id: string, name: string): Promise<Item | null> {
-    const { rows } = await pool.query<ItemRow>(
-      "UPDATE items SET name = $2, updated_at = now() WHERE id = $1 RETURNING id, name, created_at, updated_at",
-      [id, name],
-    );
-    const row = rows[0];
-    return row ? toItem(row) : null;
+    try {
+      return await prisma.item.update({ where: { id }, data: { name } });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") {
+        return null;
+      }
+      throw error;
+    }
   },
 
   async remove(id: string): Promise<boolean> {
-    const { rowCount } = await pool.query("DELETE FROM items WHERE id = $1", [id]);
-    return (rowCount ?? 0) > 0;
+    const { count } = await prisma.item.deleteMany({ where: { id } });
+    return count > 0;
   },
 };

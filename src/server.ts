@@ -1,14 +1,15 @@
 import { createApp } from "@/app";
 import { env } from "@/config/env";
 import { logger } from "@/config/logger";
-import { pool } from "@/db/pool";
+import { prisma } from "@/db/prisma";
 import { redis } from "@/lib/redis";
 
 /** Wait briefly for Postgres — covers the gap right after `npm run db:up`. */
 async function waitForDatabase(retries = 10, delayMs = 500): Promise<void> {
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
-      await pool.query("SELECT 1");
+      await prisma.$connect();
+      await prisma.$queryRaw`SELECT 1`;
       return;
     } catch (err) {
       if (attempt === retries) throw err;
@@ -53,7 +54,7 @@ async function main(): Promise<void> {
     });
 
     try {
-      await Promise.allSettled([pool.end(), redis.quit()]);
+      await Promise.allSettled([prisma.$disconnect(), redis.quit()]);
     } catch (err) {
       logger.error(err, "Error closing DB/Redis connections");
     }

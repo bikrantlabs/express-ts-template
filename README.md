@@ -1,6 +1,6 @@
 # express-ts-template
 
-Lean Node.js + Express + TypeScript template. Postgres, Redis and Mailpit wired up,
+Lean Node.js + Express + TypeScript template. Prisma, Postgres, Redis and Mailpit wired up,
 Swagger docs generated from the routes, linting and tests included.
 
 ## Requirements
@@ -15,7 +15,7 @@ cd express-ts-template
 npm install
 cp .env.example .env
 npm run db:up        # starts Postgres + Redis + Mailpit
-npm run db:migrate-up # creates the tables
+npm run db:migrate-up # applies Prisma migrations
 npm run dev
 ```
 
@@ -60,17 +60,17 @@ curl -X POST http://localhost:3000/api/items \
 
 ### Database
 
-|                             |                                          |
-| --------------------------- | ---------------------------------------- |
-| `npm run db:up`             | Start containers, wait until healthy     |
-| `npm run db:down`           | Stop containers                          |
-| `npm run db:reset`          | Wipe volumes, restart, re-run migrations |
-| `npm run db:migrate <name>` | Create a migration, e.g. `add-users`     |
-| `npm run db:migrate-up`     | Apply migrations                         |
-| `npm run db:migrate-down`   | Roll back last migration                 |
-| `npm run db:redo`           | Roll back and re-apply                   |
+|                                  |                                            |
+| -------------------------------- | ------------------------------------------ |
+| `npm run db:up`                  | Start containers, wait until healthy       |
+| `npm run db:down`                | Stop containers                            |
+| `npm run db:reset`               | Wipe volumes, restart, re-apply migrations |
+| `npm run db:migrate -- --name x` | Create and apply a development migration   |
+| `npm run db:migrate-up`          | Apply pending migrations                   |
 
-Migrations are plain SQL — write it yourself inside `pgm.sql()` in `up` and `down`.
+Edit `prisma/schema.prisma`, then run `npm run db:migrate -- --name <description>`
+to generate and apply a migration. Prisma migration history is stored in
+`prisma/migrations/`.
 
 ## Adding a feature
 
@@ -79,7 +79,7 @@ src/modules/things/
   routes/things.routes.ts          # HTTP only
   schemas/things.schemas.ts        # Zod input validation
   use-cases/*.use-case.ts          # business logic
-  repository/things.repository.ts  # SQL, and only SQL
+  repository/things.repository.ts  # Prisma persistence
 ```
 
 Mount the router in `src/app.ts`. The OpenAPI docs regenerate themselves from the

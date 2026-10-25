@@ -33,10 +33,7 @@
     /* Paths */
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      /* node-pg-migrate is ESM-only with an `exports` map; classic moduleResolution
-         can't find its types, so point at the bundle's d.ts explicitly (typecheck only). */
-      "node-pg-migrate": ["node_modules/node-pg-migrate/dist/bundle/index.d.ts"]
+      "@/*": ["src/*"]
     }
   },
   "include": ["src/**/*.ts"],

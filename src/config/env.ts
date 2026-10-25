@@ -14,7 +14,7 @@ const envSchema = z.object({
   CORS_ORIGIN: z.string().default("*"),
 
   /* Database */
-  DATABASE_URL: z.string().default("postgres://app:app@localhost:5432/app"),
+  DATABASE_URL: z.string().default("postgresql://app:app@localhost:5432/deployforgedb"),
 
   /* Redis */
   REDIS_URL: z.string().default("redis://localhost:6379"),

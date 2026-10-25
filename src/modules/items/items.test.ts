@@ -1,41 +1,27 @@
-import path from "node:path";
 import request from "supertest";
-import { runner } from "node-pg-migrate";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { createApp } from "@/app";
-import { env } from "@/config/env";
-import { pool } from "@/db/pool";
+import { prisma } from "@/db/prisma";
 import { redis } from "@/lib/redis";
 
 /**
  * Integration tests — run against the real PostgreSQL + Redis from
- * docker-compose.yml. `npm run db:up` must be done once; migrations are
- * applied automatically here (idempotent).
+ * docker-compose.yml. `npm run db:up` must be done once; `npm test` applies
+ * Prisma migrations before running the suite.
  */
 const app = createApp();
 
 beforeAll(async () => {
-  await runner({
-    databaseUrl: env.DATABASE_URL,
-    dir: path.join(process.cwd(), "migrations"),
-    direction: "up",
-    migrationsTable: "pgmigrations",
-    logger: {
-      debug: () => undefined,
-      info: () => undefined,
-      warn: () => undefined,
-      error: console.error,
-    },
-  });
+  await prisma.$connect();
 }, 60_000);
 
 beforeEach(async () => {
-  await pool.query("TRUNCATE items");
+  await prisma.item.deleteMany();
   await redis.flushall();
 });
 
 afterAll(async () => {
-  await Promise.allSettled([pool.end(), redis.quit()]);
+  await Promise.allSettled([prisma.$disconnect(), redis.quit()]);
 });
 
 describe("GET /api/items", () => {

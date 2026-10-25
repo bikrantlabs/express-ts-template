@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { asyncHandler } from "@/lib/async-handler";
-import { pool } from "@/db/pool";
+import { prisma } from "@/db/prisma";
 import { redis } from "@/lib/redis";
 
 export const healthRouter = Router();
@@ -44,7 +44,7 @@ healthRouter.get(
     const checks: Record<string, "up" | "down"> = { database: "down", redis: "down" };
 
     try {
-      await pool.query("SELECT 1");
+      await prisma.$queryRaw`SELECT 1`;
       checks.database = "up";
     } catch {
       /* stays down */

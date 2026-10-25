@@ -17,7 +17,7 @@ describe("GET /api/health", () => {
 });
 
 describe("GET /api/health/ready", () => {
-  it("reports PostgreSQL and Redis as up", async () => {
+  it("reports the database and Redis as up", async () => {
     const res = await request(app).get("/api/health/ready");
     expect(res.status).toBe(200);
     expect(res.body.checks).toEqual({ database: "up", redis: "up" });
